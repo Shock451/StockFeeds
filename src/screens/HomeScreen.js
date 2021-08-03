@@ -12,6 +12,8 @@ import { SwipeListView } from 'react-native-swipe-list-view';
 
 import { Ionicons } from '@expo/vector-icons';
 
+import News from '../components/News';
+
 import {
     normalize,
     util,
@@ -26,8 +28,10 @@ import {
     Text
 } from 'native-base';
 
-import { material, systemWeights } from 'react-native-typography';
+import { material, systemWeights, materialColors } from 'react-native-typography';
 import { ScrollView } from 'react-native-gesture-handler';
+
+import Moment from 'moment';
 
 const data = [
     {
@@ -166,14 +170,15 @@ function HomeScreen({ navigation, route }) {
                 })}
                 style={styles.rowFront}
                 underlayColor={'#fafafa'}
+                key={`list-item-${data.item.key}`}
             >
                 <View style={[{ height: '100%', flexDirection: 'row', justifyContent: 'space-between' }]}>
                     <View style={[{ justifyContent: 'space-evenly' }]}>
-                        <Text style={[material.subheading, systemWeights.bold, { color: '#3B3A41' }]}>{data.item.name}</Text>
+                        <Text style={[util.subheading, systemWeights.bold, { color: '#3B3A41' }]}>{data.item.name}</Text>
                         <Text>{data.item.company}</Text>
                     </View>
                     <View style={[{ justifyContent: 'space-evenly' }]}>
-                        <Text style={[material.subheading, { color: '#3B3A41', textAlign: 'right' }]}>{data.item.price}</Text>
+                        <Text style={[util.subheading, { color: '#3B3A41', textAlign: 'right' }]}>{data.item.price}</Text>
                         <Text style={[{
                             color: data.item.delta > 0 ? "#00962A" : "#CF2500",
                             textAlign: 'right'
@@ -189,7 +194,7 @@ function HomeScreen({ navigation, route }) {
 
     const renderHiddenItem = (data, rowMap) => {
         return (
-            <View style={styles.rowBack}>
+            <View key={`hidden-item-${data.item.key}`} style={styles.rowBack}>
                 <TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft]}>
                     <Ionicons
                         name={data.item.delta > 0 ? "md-add-circle" : "md-remove-circle"}
@@ -213,8 +218,8 @@ function HomeScreen({ navigation, route }) {
                             <>
                                 <View style={[util.m2]}>
                                     <View style={[{ flexDirection: 'row', justifyContent: 'space-between', alignItems: "flex-end", width: '100%' }]}>
-                                        <Text style={[material.title]}>Trending</Text>
-                                        <Ionicons name="md-search" size={material.titleObject.fontSize} />
+                                        <Text style={[util.title]}>Trending</Text>
+                                        <Ionicons name="md-search" size={normalize(20)} />
                                     </View>
 
                                     <ScrollView showsHorizontalScrollIndicator={false} horizontal={true} style={[util.mt2]}>
@@ -225,8 +230,8 @@ function HomeScreen({ navigation, route }) {
                                 </View>
                                 <View>
                                     <View style={[util.px2, util.mb1, { flexDirection: 'row', justifyContent: 'space-between', alignItems: "flex-end", width: '100%' }]}>
-                                        <Text style={[material.title]}>Watchlist</Text>
-                                        <Text style={[material.subheading, systemWeights.regular]}>Sort By</Text>
+                                        <Text style={[util.title]}>Watchlist</Text>
+                                        <Text style={[util.subheading, systemWeights.regular]}>Sort By</Text>
                                     </View>
                                 </View>
                             </>
@@ -235,19 +240,13 @@ function HomeScreen({ navigation, route }) {
                         renderItem={renderItem}
                         renderHiddenItem={renderHiddenItem}
                         leftOpenValue={0}
+                        keyExtractor={item => item.key.toString()}
                         rightOpenValue={-60}
                         previewRowKey={'0'}
                         previewOpenValue={-40}
                         previewOpenDelay={3000}
                         onRowDidOpen={onRowDidOpen}
-                        ListFooterComponent={
-                            <View style={[util.p2, { width: '100%' }]}>
-                                <Text style={[material.title]}>News</Text>
-                                {data && data.map((newsItem, index) => (
-                                    <NewsItem key={`news-item-${index}`} news={newsItem} />
-                                ))}
-                            </View>
-                        }
+                        // ListFooterComponent={<News news={news} />}
                     />
                 </View>
             </Container>
@@ -260,9 +259,9 @@ export default HomeScreen;
 const TrendingItem = ({ stock }) => {
     return (
         <View style={[util.p1, util.mr1, { width: 70.27, borderWidth: 1, borderColor: '#000000', borderRadius: 9 }]}>
-            <Text style={[material.subheading, systemWeights.bold]}>{stock.name}</Text>
-            <Text style={[material.body2, util.mb1]}>{stock.price}</Text>
-            <Text style={[material.body1, {
+            <Text style={[util.subheading, systemWeights.bold]}>{stock.name}</Text>
+            <Text style={[util.body2, util.mb1]}>{stock.price}</Text>
+            <Text style={[util.body1, {
                 marginTop: 'auto',
                 color: stock.delta > 0 ? "#00962A" : "#CF2500",
             }]}>
@@ -270,26 +269,6 @@ const TrendingItem = ({ stock }) => {
             </Text>
         </View>
     );
-};
-
-const NewsItem = ({ news }) => {
-    return (
-        <View style={[{
-            paddingVertical: normalize(10),
-            borderTopColor: '#3B3A41',
-            borderTopWidth: .5
-        }]}>
-            <Text style={[systemWeights.bold, { width: '75%' }]}>
-                {news.headline}
-            </Text>
-            <Text style={[systemWeights.regular, { marginVertical: normalize(8) }]}>
-                {news.summary}
-            </Text>
-            <Text style={[systemWeights.regular]}>
-                {news.time} - {news.source}
-            </Text>
-        </View>
-    );;
 };
 
 const styles = StyleSheet.create({

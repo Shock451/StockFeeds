@@ -4,6 +4,9 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
 
+import store from './src/redux/store';
+import { Provider as StateProvider } from 'react-redux';
+
 import { Container, Text } from 'native-base';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
@@ -37,10 +40,10 @@ export default function App() {
   }
 
   return (
-    <>
+    <StateProvider store={store}>
       <StatusBar style="auto" />
       <MainNavigator />
-    </>
+    </StateProvider>
   );
 }
 

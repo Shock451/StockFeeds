@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {
     SafeAreaView,
@@ -9,16 +9,24 @@ import {
     View,
 } from 'react-native';
 
-import { SwipeListView } from 'react-native-swipe-list-view';
+import {
+    LineChart,
+    BarChart,
+    PieChart,
+    ProgressChart,
+    ContributionGraph
+} from 'expo-chart-kit'
 
 import { Ionicons } from '@expo/vector-icons';
 
 import {
     normalize,
     util,
-    palette
+    palette,
+    SCREEN_WIDTH,
+    moderateScale,
+    spacing,
 } from '../theme';
-
 
 import {
     Container,
@@ -28,7 +36,8 @@ import {
 } from 'native-base';
 
 import { material, systemWeights } from 'react-native-typography';
-import { ScrollView } from 'react-native-gesture-handler';
+
+import News from '../components/News';
 
 const data = [
     {
@@ -203,10 +212,51 @@ const data = [
     },
 ];
 
+const NEWS_API_TOKEN = `pk_e778814df27a43608629ec4a249a4b7e`;
+
 function StockDetailsScreen({ navigation, route }) {
 
     const { key } = route.params;
-    // console.log(route.params);
+    const [news, setNews] = useState([])
+    const [chartData, setChartData] = useState([]);
+
+    const line = {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+        datasets: [
+            {
+                data: [20, 45, 28, 80, 99, 43],
+                strokeWidth: 2, // optional
+            },
+        ],
+    };
+
+    const newsUrl = `https://cloud.iexapis.com/stable/stock/${data[key].name}/batch?types=quote,news,chart&range=1m&last=10&token=${NEWS_API_TOKEN}`
+    console.log(newsUrl)
+    useEffect(() => {
+        const fetchNewsAsync = async () => {
+            try {
+                let response = await fetch(newsUrl);
+                let json = await response.json();
+                console.log(json.chart)
+                if (json.chart.length > 3) {
+                    const chartData = {
+                        labels: json.chart.slice(-5).map(point => point.label),
+                        datasets: [
+                            {
+                                data: json.chart.slice(-5).map(point => point.high)
+                            }
+                        ]
+                    }
+                    setChartData(chartData)
+                }
+                setNews(json.news)
+            } catch (error) {
+                
+                // console.error(error);
+            }
+        };
+        fetchNewsAsync();
+    }, [])
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -231,8 +281,8 @@ function StockDetailsScreen({ navigation, route }) {
                             width: '100%'
                         }]}>
                             <View style={[{ flexDirection: 'row', alignItems: 'flex-end' }]}>
-                                <Text style={[material.title, systemWeights.bold]}>{data[key].name}</Text>
-                                <Text style={[material.subheading, util.ml1]}>{data[key].company}</Text>
+                                <Text style={[util.title, systemWeights.bold]}>{data[key].name}</Text>
+                                <Text style={[util.subheading, util.ml1]}>{data[key].company}</Text>
                             </View>
                             <View style={[{ flexDirection: 'row' }]}>
                                 <Ionicons
@@ -240,38 +290,59 @@ function StockDetailsScreen({ navigation, route }) {
                                     name={data[key].delta > 0 ? "md-add-circle" : "md-remove-circle"}
                                     color={data[key].delta > 0 ? "#00962A" : "#CF2500"}
                                     size={normalize(16)} />
-                                <Text style={[material.subheading, systemWeights.regular]}>Watchlist</Text>
+                                <Text style={[util.subheading, systemWeights.regular]}>Watchlist</Text>
                             </View>
                         </View>
                         <View style={[util.px2, util.mb1, { flexDirection: 'row', alignItems: 'flex-end' }]}>
-                            <Text style={[material.subheading]}>{data[key].price}</Text>
-                            <Text style={[material.body2, util.ml1]}>{data[key].delta}</Text>
+                            <Text style={[util.subheading]}>{data[key].price}</Text>
+                            <Text style={[util.body2, util.ml1]}>{data[key].delta}</Text>
                         </View>
                     </View>
-                    <View style={[util.py1, {
-                        borderTopWidth: .6,
-                        borderTopColor: '#C4C4C4',
-                        width: '100%',
-                    }]}>
-                        <Image source={require('../assets/stock-chart.png')} style={{
-                            marginLeft: 'auto',
-                            marginRight: 'auto',
-                            width: 233,
-                            height: 139.3,
-                        }} />
+                    <View style={[
+                        util.py2, util.px1,
+                        {
+                            borderTopWidth: .6,
+                            borderTopColor: '#C4C4C4',
+                            width: '100%',
+                        }]}>
+                        {chartData.datasets?.length > 0 &&
+                            <LineChart
+                                data={chartData}
+
+                                width={SCREEN_WIDTH - spacing(2)} // from react-native
+                                height={220}
+                                yAxisLabel={'$'}
+                                chartConfig={{
+                                    backgroundColor: '#fff',
+                                    backgroundGradientFrom: '#fff',
+                                    backgroundGradientTo: '#fff',
+                                    decimalPlaces: 2, // optional, defaults to 2dp
+                                    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                                    style: {
+                                        borderRadius: 16,
+                                    }
+                                }}
+                                bezier
+                                style={{
+                                    marginVertical: 0,
+                                    borderRadius: 4,
+                                }}
+                            />
+                        }
                     </View>
+
+
                     <View style={[util.p2, { width: '100%' }]}>
-                        <Text style={[material.title]}>Stats</Text>
+                        <Text style={[util.title]}>Stats</Text>
                         <Stats data={data[key].stats} />
                     </View>
-                    <View style={[util.p2, { width: '100%' }]}>
-                        <Text style={[material.title]}>News</Text>
-                        {data && data.slice(0, 2).map((newsItem, index) => (
-                            <NewsItem key={`news-item-${index}`} news={newsItem} />
-                        ))}
+
+                    <View style={[util.py2, { width: '100%' }]}>
+                        <News news={news} />
                     </View>
+
                     <View style={[util.px2, { width: '100%' }]}>
-                        <Text style={[material.title]}>About</Text>
+                        <Text style={[util.title]}>About</Text>
                         <View style={[{
                             paddingVertical: normalize(10),
                             borderTopColor: '#3B3A41',
@@ -303,35 +374,15 @@ const Stats = ({ data }) => {
                         borderBottomColor: '#3B3A41',
                         borderBottomWidth: .5
                     }]}>
-                    <Text style={[material.body1, { width: '16%' }]}>{row[0]}</Text>
-                    <Text style={[material.body1, { width: '16%' }]}>{row[1]}</Text>
-                    <Text style={[material.body1, { width: '16%' }]}>{row[2]}</Text>
-                    <Text style={[material.body1, { width: '16%' }]}>{row[3]}</Text>
-                    <Text style={[material.body1, { width: '16%' }]}>{row[4]}</Text>
-                    <Text style={[material.body1, { width: '16%' }]}>{row[5]}</Text>
+                    <Text style={[util.body1, { width: '16%' }]}>{row[0]}</Text>
+                    <Text style={[util.body1, { width: '16%' }]}>{row[1]}</Text>
+                    <Text style={[util.body1, { width: '16%' }]}>{row[2]}</Text>
+                    <Text style={[util.body1, { width: '16%' }]}>{row[3]}</Text>
+                    <Text style={[util.body1, { width: '16%' }]}>{row[4]}</Text>
+                    <Text style={[util.body1, { width: '16%' }]}>{row[5]}</Text>
                 </View>
             ))
             }
         </>
     );
 }
-
-const NewsItem = ({ news }) => {
-    return (
-        <View style={[{
-            paddingVertical: normalize(10),
-            borderTopColor: '#3B3A41',
-            borderTopWidth: .5
-        }]}>
-            <Text style={[systemWeights.bold, { width: '75%' }]}>
-                {news.headline}
-            </Text>
-            <Text style={[systemWeights.regular, { marginVertical: normalize(8) }]}>
-                {news.summary}
-            </Text>
-            <Text style={[systemWeights.regular]}>
-                {news.time} - {news.source}
-            </Text>
-        </View>
-    );;
-};

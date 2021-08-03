@@ -8,6 +8,8 @@ import {
     View,
 } from 'react-native';
 
+import { useSelector } from 'react-redux'
+
 import { SwipeListView } from 'react-native-swipe-list-view';
 
 import { Ionicons } from '@expo/vector-icons';
@@ -29,130 +31,9 @@ import {
 import { material, systemWeights } from 'react-native-typography';
 import { ScrollView } from 'react-native-gesture-handler';
 
-const data = [
-    {
-        key: 1,
-        name: 'TSLA',
-        company: 'Tesla, Inc.',
-        price: '2,023.34',
-        delta: 9.14,
-        headline: `Tesla, Inc. Has $16.24 Million Holdings in Delta Air...`,
-        summary: `Tesla Inc. lessened its stake in Delta Air Lines, Inc. (NYSE:DAL) by 47.6% in the 2nd...`,
-        time: `8/26/20, 07:47 PM`,
-        source: `Seeking Alpha - Long Ideas`,
-        about: `Tesla, Inc. is an American electric vehicle and clean energy company based in Palo Alto, California. The company specializes in electric vehicle manufacturing, battery energy storage from home to grid scale and, through its acquisition of`,
-    },
-    {
-        key: 2,
-        name: 'JRJC',
-        company: 'China Finance Online Co.',
-        price: '2,023.34',
-        delta: 9.14,
-        headline: `China Finance: Take Advantage Of The First Mover Advantage`,
-        summary: `China Finance is a company that has been heavily covered for both the right and wrong reasons. Initially formed in 2004 by...`,
-        time: `5:30 AM`,
-        source: `Fox Report`,
-        about: `Tesla, Inc. is an American electric vehicle and clean energy company based in Palo Alto, California. The company specializes in electric vehicle manufacturing, battery energy storage from home to grid scale and, through its acquisition of`,
-    },
-    {
-        key: 3,
-        name: 'VXRT',
-        company: 'Vaxart, Inc.',
-        price: '23.34',
-        delta: -16.14,
-        headline: `Vaxart: Take Advantage Of The First Mover Advantage`,
-        summary: `Vaxart is a company that has been heavily covered for both the right and wrong reasons. Initially formed in 2004 by...`,
-        time: `10:42 AM`,
-        source: `Ticker Report`,
-        about: `Tesla, Inc. is an American electric vehicle and clean energy company based in Palo Alto, California. The company specializes in electric vehicle manufacturing, battery energy storage from home to grid scale and, through its acquisition of`,
-    },
-    {
-        key: 4,
-        name: 'SOLO',
-        company: 'Electrameccanica Vehicles',
-        price: '3.34',
-        delta: -0.14,
-        headline: `Electrameccanica Vehicles: Take Advantage Of The First Mover Advantage`,
-        summary: `Electrameccanica Vehicles is a company that has been heavily covered for both the right and wrong reasons. Initially formed in 2004 by...`,
-        time: `1:14 PM`,
-        source: `US News`,
-        about: `Tesla, Inc. is an American electric vehicle and clean energy company based in Palo Alto, California. The company specializes in electric vehicle manufacturing, battery energy storage from home to grid scale and, through its acquisition of`,
-    },
-    {
-        key: 5,
-        name: 'RHUB',
-        company: 'Rhubtech, LLC.',
-        price: '8,023.34',
-        delta: -3.1,
-        headline: `Rhubtech: Take Advantage Of The First Mover Advantage`,
-        summary: `Rhubtech, LLC. is a company that has been heavily covered for both the right and wrong reasons. Initially formed in 2004 by...`,
-        time: `9:42 PM`,
-        source: `Fox Report`,
-        about: `Tesla, Inc. is an American electric vehicle and clean energy company based in Palo Alto, California. The company specializes in electric vehicle manufacturing, battery energy storage from home to grid scale and, through its acquisition of`,
-    },
-    {
-        key: 6,
-        name: 'TSLA',
-        company: 'Tesla, Inc.',
-        price: '2,023.34',
-        delta: 9.14,
-        headline: `Tesla, Inc. Has $16.24 Million Holdings in Delta Air...`,
-        summary: `Tesla Inc. lessened its stake in Delta Air Lines, Inc. (NYSE:DAL) by 47.6% in the 2nd...`,
-        time: `8/26/20, 07:47 PM`,
-        source: `Seeking Alpha - Long Ideas`,
-        about: `Tesla, Inc. is an American electric vehicle and clean energy company based in Palo Alto, California. The company specializes in electric vehicle manufacturing, battery energy storage from home to grid scale and, through its acquisition of`,
-    },
-    {
-        key: 7,
-        name: 'JRJC',
-        company: 'China Finance Online Co.',
-        price: '2,023.34',
-        delta: 9.14,
-        headline: `China Finance: Take Advantage Of The First Mover Advantage`,
-        summary: `China Finance is a company that has been heavily covered for both the right and wrong reasons. Initially formed in 2004 by...`,
-        time: `5:30 AM`,
-        source: `Fox Report`,
-        about: `Tesla, Inc. is an American electric vehicle and clean energy company based in Palo Alto, California. The company specializes in electric vehicle manufacturing, battery energy storage from home to grid scale and, through its acquisition of`,
-    },
-    {
-        key: 8,
-        name: 'VXRT',
-        company: 'Vaxart, Inc.',
-        price: '23.34',
-        delta: -16.14,
-        headline: `Vaxart: Take Advantage Of The First Mover Advantage`,
-        summary: `Vaxart is a company that has been heavily covered for both the right and wrong reasons. Initially formed in 2004 by...`,
-        time: `10:42 AM`,
-        source: `Ticker Report`,
-        about: `Tesla, Inc. is an American electric vehicle and clean energy company based in Palo Alto, California. The company specializes in electric vehicle manufacturing, battery energy storage from home to grid scale and, through its acquisition of`,
-    },
-    {
-        key: 9,
-        name: 'SOLO',
-        company: 'Electrameccanica Vehicles',
-        price: '3.34',
-        delta: -0.14,
-        headline: `Electrameccanica Vehicles: Take Advantage Of The First Mover Advantage`,
-        summary: `Electrameccanica Vehicles is a company that has been heavily covered for both the right and wrong reasons. Initially formed in 2004 by...`,
-        time: `1:14 PM`,
-        source: `US News`,
-        about: `Tesla, Inc. is an American electric vehicle and clean energy company based in Palo Alto, California. The company specializes in electric vehicle manufacturing, battery energy storage from home to grid scale and, through its acquisition of`,
-    },
-    {
-        key: 10,
-        name: 'RHUB',
-        company: 'Rhubtech, LLC.',
-        price: '8,023.34',
-        delta: -3.1,
-        headline: `Rhubtech: Take Advantage Of The First Mover Advantage`,
-        summary: `Rhubtech, LLC. is a company that has been heavily covered for both the right and wrong reasons. Initially formed in 2004 by...`,
-        time: `9:42 PM`,
-        source: `Fox Report`,
-        about: `Tesla, Inc. is an American electric vehicle and clean energy company based in Palo Alto, California. The company specializes in electric vehicle manufacturing, battery energy storage from home to grid scale and, through its acquisition of`,
-    },
-];
-
 function WatchlistScreen({ navigation }) {
+
+    const stocks = useSelector(state => state.stocks)
 
     const onRowDidOpen = rowKey => {
         console.log('This row opened', rowKey);
@@ -169,11 +50,11 @@ function WatchlistScreen({ navigation }) {
             >
                 <View style={[{ height: '100%', flexDirection: 'row', justifyContent: 'space-between' }]}>
                     <View style={[{ justifyContent: 'space-evenly' }]}>
-                        <Text style={[material.subheading, systemWeights.bold, { color: '#3B3A41' }]}>{data.item.name}</Text>
+                        <Text style={[util.subheading, systemWeights.bold, { color: '#3B3A41' }]}>{data.item.name}</Text>
                         <Text>{data.item.company}</Text>
                     </View>
                     <View style={[{ justifyContent: 'space-evenly' }]}>
-                        <Text style={[material.subheading, { color: '#3B3A41', textAlign: 'right' }]}>{data.item.price}</Text>
+                        <Text style={[util.subheading, { color: '#3B3A41', textAlign: 'right' }]}>{data.item.price}</Text>
                         <Text style={[{
                             color: data.item.delta > 0 ? "#00962A" : "#CF2500",
                             textAlign: 'right'
@@ -212,18 +93,19 @@ function WatchlistScreen({ navigation }) {
                         ListHeaderComponent={
                             <View style={[util.m2]}>
                                 <View style={[{ flexDirection: 'row', justifyContent: 'space-between', alignItems: "flex-end", width: '100%' }]}>
-                                    <Text style={[material.title]}>Watchlist</Text>
+                                    <Text style={[util.title]}>Watchlist</Text>
                                     <Ionicons name="md-search" size={material.titleObject.fontSize} />
                                 </View>
                                 <TouchableOpacity style={[util.mt3]} activeOpacity={.8} onPress={()=>navigation.navigate("AllStocks")}>
-                                    <Text style={[material.button, { textDecorationLine: 'underline', textAlign: 'right' }]}>Show me all stocks instead</Text>
+                                    <Text style={[util.buttonText, { textDecorationLine: 'underline', textAlign: 'right' }]}>Show me all stocks instead</Text>
                                 </TouchableOpacity>
                             </View>
                         }
-                        data={data}
+                        data={stocks.watchlist}
                         renderItem={renderItem}
                         renderHiddenItem={renderHiddenItem}
                         leftOpenValue={0}
+                        keyExtractor={item => item.key.toString()}
                         rightOpenValue={-60}
                         previewRowKey={'0'}
                         previewOpenValue={-40}
@@ -241,9 +123,9 @@ export default WatchlistScreen;
 const TrendingItem = ({ stock }) => {
     return (
         <View style={[util.p1, util.mr1, { width: 70.27, borderWidth: 1, borderColor: '#000000', borderRadius: 9 }]}>
-            <Text style={[material.subheading, systemWeights.bold]}>{stock.name}</Text>
-            <Text style={[material.body1, util.mb1]}>{stock.price}</Text>
-            <Text style={[material.caption, { marginTop: 'auto' }]}>{stock.delta}</Text>
+            <Text style={[util.subheading, systemWeights.bold]}>{stock.name}</Text>
+            <Text style={[util.body1, util.mb1]}>{stock.price}</Text>
+            <Text style={[util.caption, { marginTop: 'auto' }]}>{stock.delta}</Text>
         </View>
     );
 };

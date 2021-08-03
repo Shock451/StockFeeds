@@ -41,11 +41,11 @@ export default (props) => {
             >
                 <View style={[{ height: '100%', flexDirection: 'row', justifyContent: 'space-between' }]}>
                     <View style={[{ justifyContent: 'space-evenly' }]}>
-                        <Text style={[material.subheading, systemWeights.bold, { color: '#3B3A41' }]}>{data.item.name}</Text>
+                        <Text style={[util.subheading, systemWeights.bold, { color: '#3B3A41' }]}>{data.item.name}</Text>
                         <Text>{data.item.company}</Text>
                     </View>
                     <View style={[{ justifyContent: 'space-evenly' }]}>
-                        <Text style={[material.subheading, { color: '#3B3A41', textAlign: 'right' }]}>{data.item.price}</Text>
+                        <Text style={[util.subheading, { color: '#3B3A41', textAlign: 'right' }]}>{data.item.price}</Text>
                         <Text style={[{
                             color: data.item.delta > 0 ? "#00962A" : "#CF2500",
                             textAlign: 'right'

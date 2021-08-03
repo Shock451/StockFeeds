@@ -3,6 +3,7 @@ import { moderateScale } from 'react-native-size-matters';
 import { Dimensions, Platform, PixelRatio } from 'react-native';
 
 import { material } from 'react-native-typography';
+import { getFontScale } from 'react-native/Libraries/Utilities/PixelRatio';
 
 const {
     width: SCREEN_WIDTH,
@@ -10,9 +11,10 @@ const {
 } = Dimensions.get('window');
 
 // based on iphone 5s's scale
-const scale = SCREEN_WIDTH / 320;
+const scale = SCREEN_WIDTH / 320 * getFontScale();
 
 function normalize(size) {
+    // console.log(PixelRatio.getPixelSizeForLayoutSize())
     const newSize = size * scale
     if (Platform.OS === 'ios') {
         return Math.round(PixelRatio.roundToNearestPixel(newSize))
@@ -36,186 +38,186 @@ const palette = {
     darkRed: '#CC0000',
 };
 
-const spacing = (unit: Number) => moderateScale(unit * 8);
+const spacing = (unit: Number) => normalize(unit * 8);
 
 const util = StyleSheet.create({
     // margin & padding 0 - 3
     m0: {
-        margin: moderateScale(spacing(0)),
+        margin: spacing(0),
     },
     m1: {
-        margin: moderateScale(spacing(1)),
+        margin: spacing(1),
     },
     m2: {
-        margin: moderateScale(spacing(2)),
+        margin: spacing(2),
     },
     m3: {
-        margin: moderateScale(spacing(3)),
+        margin: spacing(3),
     },
     p0: {
-        padding: moderateScale(spacing(0)),
+        padding: spacing(0),
     },
     p1: {
-        padding: moderateScale(spacing(1)),
+        padding: spacing(1),
     },
     p2: {
-        padding: moderateScale(spacing(2)),
+        padding: spacing(2),
     },
     p3: {
-        padding: moderateScale(spacing(3)),
+        padding: spacing(3),
     },
 
     my0: {
-        marginVertical: moderateScale(spacing(0)),
+        marginVertical: spacing(0),
     },
     my1: {
-        marginVertical: moderateScale(spacing(1)),
+        marginVertical: spacing(1),
     },
     my2: {
-        marginVertical: moderateScale(spacing(3)),
+        marginVertical: spacing(3),
     },
     my3: {
-        marginVertical: moderateScale(spacing(3)),
+        marginVertical: spacing(3),
     },
     py0: {
-        paddingVertical: moderateScale(spacing(0)),
+        paddingVertical: spacing(0),
     },
     py1: {
-        paddingVertical: moderateScale(spacing(1)),
+        paddingVertical: spacing(1),
     },
     py2: {
-        paddingVertical: moderateScale(spacing(2)),
+        paddingVertical: spacing(2),
     },
     py3: {
-        paddingVertical: moderateScale(spacing(3)),
+        paddingVertical: spacing(3),
     },
 
 
     mt0: {
-        marginTop: moderateScale(spacing(0)),
+        marginTop: spacing(0),
     },
     mt1: {
-        marginTop: moderateScale(spacing(1)),
+        marginTop: spacing(1),
     },
     mt2: {
-        marginTop: moderateScale(spacing(2)),
+        marginTop: spacing(2),
     },
     mt3: {
-        marginTop: moderateScale(spacing(3)),
+        marginTop: spacing(3),
     },
     pt0: {
-        paddingTop: moderateScale(spacing(0)),
+        paddingTop: spacing(0),
     },
     pt1: {
-        paddingTop: moderateScale(spacing(1)),
+        paddingTop: spacing(1),
     },
     pt2: {
-        paddingTop: moderateScale(spacing(2)),
+        paddingTop: spacing(2),
     },
     pt3: {
-        paddingTop: moderateScale(spacing(3)),
+        paddingTop: spacing(3),
     },
 
 
     mb0: {
-        marginBottom: moderateScale(spacing(0)),
+        marginBottom: spacing(0),
     },
     mb1: {
-        marginBottom: moderateScale(spacing(1)),
+        marginBottom: spacing(1),
     },
     mb2: {
-        marginBottom: moderateScale(spacing(2)),
+        marginBottom: spacing(2),
     },
     mb3: {
-        marginBottom: moderateScale(spacing(3)),
+        marginBottom: spacing(3),
     },
     pb0: {
-        paddingBottom: moderateScale(spacing(0)),
+        paddingBottom: spacing(0),
     },
     pb1: {
-        paddingBottom: moderateScale(spacing(1)),
+        paddingBottom: spacing(1),
     },
     pb2: {
-        paddingBottom: moderateScale(spacing(2)),
+        paddingBottom: spacing(2),
     },
     pb3: {
-        paddingBottom: moderateScale(spacing(3)),
+        paddingBottom: spacing(3),
     },
 
 
     mx0: {
-        marginHorizontal: moderateScale(spacing(0)),
+        marginHorizontal: spacing(0),
     },
     mx1: {
-        marginHorizontal: moderateScale(spacing(1)),
+        marginHorizontal: spacing(1),
     },
     mx2: {
-        marginHorizontal: moderateScale(spacing(2)),
+        marginHorizontal: spacing(2),
     },
     mx3: {
-        marginHorizontal: moderateScale(spacing(3)),
+        marginHorizontal: spacing(3),
     },
     px0: {
-        paddingHorizontal: moderateScale(spacing(0)),
+        paddingHorizontal: spacing(0),
     },
     px1: {
-        paddingHorizontal: moderateScale(spacing(1)),
+        paddingHorizontal: spacing(1),
     },
     px2: {
-        paddingHorizontal: moderateScale(spacing(2)),
+        paddingHorizontal: spacing(2),
     },
     px3: {
-        paddingHorizontal: moderateScale(spacing(3)),
+        paddingHorizontal: spacing(3),
     },
 
     ml0: {
-        marginLeft: moderateScale(spacing(0)),
+        marginLeft: spacing(0),
     },
     ml1: {
-        marginLeft: moderateScale(spacing(1)),
+        marginLeft: spacing(1),
     },
     ml2: {
-        marginLeft: moderateScale(spacing(2)),
+        marginLeft: spacing(2),
     },
     ml3: {
-        marginLeft: moderateScale(spacing(3)),
+        marginLeft: spacing(3),
     },
     pl0: {
-        paddingLeft: moderateScale(spacing(0)),
+        paddingLeft: spacing(0),
     },
     pl1: {
-        paddingLeft: moderateScale(spacing(1)),
+        paddingLeft: spacing(1),
     },
     pl2: {
-        paddingLeft: moderateScale(spacing(2)),
+        paddingLeft: spacing(2),
     },
     pl3: {
-        paddingLeft: moderateScale(spacing(3)),
+        paddingLeft: spacing(3),
     },
 
     mr0: {
-        marginRight: moderateScale(spacing(0)),
+        marginRight: spacing(0),
     },
     mr1: {
-        marginRight: moderateScale(spacing(1)),
+        marginRight: spacing(1),
     },
     mr2: {
-        marginRight: moderateScale(spacing(2)),
+        marginRight: spacing(2),
     },
     mr3: {
-        marginRight: moderateScale(spacing(3)),
+        marginRight: spacing(3),
     },
     pr0: {
-        paddingRight: moderateScale(spacing(0)),
+        paddingRight: spacing(0),
     },
     pr1: {
-        paddingRight: moderateScale(spacing(1)),
+        paddingRight: spacing(1),
     },
     pr2: {
-        paddingRight: moderateScale(spacing(2)),
+        paddingRight: spacing(2),
     },
     pr3: {
-        paddingRight: moderateScale(spacing(3)),
+        paddingRight: spacing(3),
     },
 
     containerXY: {
@@ -241,23 +243,29 @@ const util = StyleSheet.create({
     },
 
 
-    mini: {
-        fontSize: normalize(12),
+    body1: {
+        ...material.body1Object,
+        fontSize: normalize(14),
     },
-    small: {
-        fontSize: normalize(15),
+    body2: {
+        ...material.body2Object,
+        fontSize: normalize(14),
     },
-    medium: {
-        fontSize: normalize(17),
+    subheading: {
+        ...material.subheadingObject,
+        fontSize: normalize(16),
     },
-    large: {
+    title: {
+        ...material.titleObject,
         fontSize: normalize(20),
     },
-    xlarge: {
-        fontSize: normalize(24),
+    caption: {
+        ...material.captionObject,
+        fontSize: normalize(12),
     },
-    superlarge: {
-        fontSize: normalize(36),
+    buttonText: {
+        ...material.buttonObject,
+        fontSize: normalize(14),
     },
 
     textInput: {
@@ -290,4 +298,7 @@ export {
     util,
     palette,
     normalize,
+    moderateScale,
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
 }
